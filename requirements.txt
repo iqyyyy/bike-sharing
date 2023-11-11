@@ -1,3 +1,9 @@
+numpy==1.25.2
+pandas==2.1.1
+matplotlib==3.7.2
+streamlit==1.24.1
+babel==2.11.0
+seaborn==0.12.2
 absl-py @ file:///C:/b/abs_d3cv5rzljl/croot/absl-py_1686852506854/work
 aiobotocore @ file:///C:/b/abs_1c1a_vjay2/croot/aiobotocore_1682537737724/work
 aiofiles @ file:///C:/b/abs_9ex6mi6b56/croot/aiofiles_1683773603390/work
