@@ -58,7 +58,7 @@ def create_weathercond_year_df(df):
 def create_weathercond_month_df(df):
     weathercond_month_df = df.groupby(by=[df["datetime"].dt.month,df["weather_cond"]]).total.sum().reset_index()
     weathercond_month_df['datetime'] = weathercond_month_df.datetime.astype('str')
-    weathercond_month_df['weather_cond'] = weathercond_month_df.weather_cond.astype('category')
+    weathercond_month_df['weather_cond'] = weathercond_month_df.weather_cond.astype('str')
     return weathercond_month_df
 
 # create_weathercond_days_df() untuk menyiapkan weathercond_days_df
@@ -83,22 +83,22 @@ def create_season_year_df(df):
 # create_season_days_df() untuk menyiapkan season_days_df
 def create_season_days_df(df):
     season_days_df = df.groupby(by=[df["weekday"],df["season"]]).total.sum().reset_index()
-    season_days_df['weekday'] = season_days_df.weekday.astype('category')
+    season_days_df['weekday'] = season_days_df.weekday.astype('str')
     season_days_df['season'] = season_days_df.season.astype('str')
     return season_days_df
 
 # create_weather_hour_df() untuk menyiapkan weather_hour_df
 def create_weather_hour_df(df):
     weather_hour_df = df.groupby(by=[df["hour"], df['weather_cond']]).total.sum().reset_index()
-    weather_hour_df['hour'] = weather_hour_df.hour.astype('category')
-    weather_hour_df['weather_cond'] = weather_hour_df.weather_cond.astype('category')
+    weather_hour_df['hour'] = weather_hour_df.hour.astype('str')
+    weather_hour_df['weather_cond'] = weather_hour_df.weather_cond.astype('str')
     return weather_hour_df
 
 # create_season_hour_df() untuk menyiapkan season_hour_df
 def create_season_hour_df(df):
     season_hour_df = df.groupby(by=[df["hour"], df['season']]).total.sum().reset_index()
-    season_hour_df['hour'] = season_hour_df.hour.astype('category')
-    season_hour_df['season'] = season_hour_df.season.astype('category')
+    season_hour_df['hour'] = season_hour_df.hour.astype('str')
+    season_hour_df['season'] = season_hour_df.season.astype('str')
     return season_hour_df
 
 # create_days_hour_df() untuk menyiapkan days_hour_df
@@ -192,14 +192,19 @@ st.pyplot(fig)
 # membuat subheader total rental by year
 st.subheader('Rental by Year')
 
+colors_a = ["#0077B6", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF"]
+date_colors = {"2011": "#90E0EF", "2012": "#0077B6"}
+weather_colors = {"1": "#03045e", "2": "#2a9d8f", "3": "#4cc9f0",  "4": "#aaf683"}
+season_colors = {"1": "#03045e", "2": "#2a9d8f", "3": "#4cc9f0",  "4": "#aaf683"}
+
 sns.set_style('whitegrid')
 sns.set_context('talk')
 fig, ax = plt.subplots(figsize=(20, 10))
 sns.barplot(data=byyear_df,
             x='year',
             y='total',
+            palette=colors_a,
             ax=ax,
-            palette=['yellow', 'red']
             )
 
 ax.set_xlabel('Tahun', size=20)
@@ -219,7 +224,8 @@ fig, ax = plt.subplots(figsize=(20, 10))
 sns.barplot(data=bymonth_df,
             x='month',
             y='total',
-            ax=ax
+            palette=["#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF", "#0077B6", "#90E0EF", "#90E0EF", "#90E0EF", "#90E0EF"],
+            ax=ax,
             )
 
 ax.set_xlabel('Bulan', size=20)
@@ -242,6 +248,7 @@ with col1:
     sns.barplot(data=weathercond_df,
             x='weather_cond',
             y='total',
+            palette=colors_a,
             ax=ax
     )
 
@@ -259,9 +266,11 @@ with col2:
     sns.set_context('talk')
     fig, ax = plt.subplots(figsize=(30,25))
 
-    sns.barplot(data=season_df,
+    sns.barplot(
             x='season',
             y='total',
+            data=season_df,
+            palette=["#90E0EF", "#90E0EF", "#0077B6", "#90E0EF"],
             ax=ax
     )
 
@@ -284,6 +293,7 @@ with col1:
             x='weather_cond',
             y='total',
             hue='datetime',
+            palette=date_colors,
             ax=ax
     )
 
@@ -306,6 +316,7 @@ with col2:
             x='season',
             y='total',
             hue='datetime',
+            palette=date_colors,
             ax=ax
     )
 
@@ -332,6 +343,7 @@ with col1:
                 x='datetime',
                 y='total',
                 hue='weather_cond',
+                palette=weather_colors,
                 ax=ax)
 
     ax.set_title('Total Sewa Berdasarkan Bulan dan Cuaca', fontsize=65)
@@ -350,6 +362,7 @@ with col2:
               x='total',
               y='weekday',
               hue='weather_cond',
+              palette=weather_colors,
               ax=ax)
 
     ax.set_title('Total Sewa Berdasarkan Hari dalam seminggu dan Cuaca', fontsize=65)
@@ -367,6 +380,7 @@ sns.barplot(data=season_days_df,
             x='total',
             y='weekday',
             hue='season',
+            palette=season_colors,
             ax=ax)
 
 ax.set_title('Jumlah Sewa Berdasarkan Musim dan Hari dalam Seminggu', fontsize=35)
@@ -408,6 +422,7 @@ with col2:
               x='hour',
               y='total',
               hue='weather_cond',
+              palette=weather_colors,
               ax=ax)
 
     ax.set_title('Total Sewa Berdasarkan Jam dan Cuaca', fontsize=65)
@@ -446,6 +461,7 @@ with col2:
               x='hour',
               y='total',
               hue='season',
+              palette=season_colors,
               ax=ax)
 
     ax.set_title('Total Sewa Berdasarkan Jam dan Musim', fontsize=65)
@@ -463,7 +479,7 @@ plt.pie(
         data=workingday_df,
         x='total',
         labels='workingday',
-        colors = ('red', 'purple'),
+        colors = ("#90E0EF", "#0077B6"),
         wedgeprops={'width': 0.65},
         textprops={'color':"black", 'fontsize': 55},
         autopct='%1.1f%%'
